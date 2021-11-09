@@ -1,6 +1,6 @@
 //Macro to count yh2ax foci on nucleus
 //input: image with 4 channels, being C1 yh2ax channel and C4 nucleus channel
-//outuput: number of yh2ax foci
+//outuput: number of yh2ax foci on results windows
 //Method: Inside nucleus ROI find maxima using Find Maxima tools with prominence=2000 (difference between maxima and minumum around)
 //Made by Andre Thomaz (athomaz@ifi.unicamp.br) @ 2021-10-11
 
