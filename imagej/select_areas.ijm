@@ -45,7 +45,7 @@ run("Threshold...");
 waitForUser('Adjust Threshold to select clusters');
 run("Convert to Mask");
 selectWindow("SUM-1");
-run("Analyze Particles...", "size=0.10-Infinity add");
+run("Analyze Particles...", "size=0.20-Infinity add");
 selectWindow("SUM");
 
 //start
@@ -73,7 +73,7 @@ for (i=1; i<numROIS;i++) //start at 1 to keep nucleus ROI
 	run("Clear", "slice");
 	Stack.setChannel(3);
 	run("Clear", "slice");
-	imgNumber = i+1;
+	imgNumber = i+0;
 	name = dir + imgNumber;
 	//print(name);
 	saveAs("TIff", name);
