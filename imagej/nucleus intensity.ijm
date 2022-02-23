@@ -8,14 +8,18 @@ run("Clear Results");
 roiManager("reset");
 
 //Project and select nucleus ROI
-//title = getTitle();
-file_path = "C:/Users/Andre/Desktop/Images/fak mio yh2ax/myo5b/doxo";
+title = getTitle();
+img_number_index = lastIndexOf(title, '405');
+img_number = substring(title, img_number_index+4, img_number_index+6);
+
+file_path = getDirectory( "Choose the Directory" );
 //print(file_path);
-img_number = getNumber("Image Number?", 1);
-first_slice = getNumber("First Slice?", 1);
-slices = getNumber("How many slices?", 14);
-last_slice = first_slice + slices;
-run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projection=[Sum Slices]");
+//img_number = getNumber("Image Number?", 1);
+//first_slice = getNumber("First Slice?", 1);
+//slices = getNumber("How many slices?", 14);
+//last_slice = first_slice + slices;
+run("Z Project...", "projection=[Sum Slices]");
+//run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projection=[Sum Slices]");
 Stack.setDisplayMode("color");
 Stack.setChannel(4);
 setTool("wand");
