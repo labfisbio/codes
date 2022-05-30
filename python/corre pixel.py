@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Script to calculate the pearson correlation coeficient of each pixel of each patch 
-of the image for images in a folder. Pathes = small images containing the structures to be correlated
+of the image for images in a folder. Pacthes = small images containing the structures to be correlated
 
-input: 3D image with 3 or 4 channels
+input: 2D image with 3 or 4 channels
 outuput: xlsx with pearson coefficient for all cells (df_rcorr)
          
 
@@ -54,11 +54,17 @@ for folder in os.listdir():
             if tif_file.split('.')[1] == 'tif': 
                 
                 img = io.imread(tif_file) #load image
+                print(tif_file)
             
-                #project into z
-                ch1_sumz = np.sum(np.array(img[:,:,0]), axis=0)   
-                ch2_sumz = np.sum(np.array(img[:,:,1]), axis=0)
-                ch3_sumz = np.sum(np.array(img[:,:,2]), axis=0)
+                #load channels to correlate
+                ch1_sumz = np.array(img[:,:,0])
+                ch2_sumz = np.array(img[:,:,1])
+                ch3_sumz = np.array(img[:,:,2])
+                
+            
+                #ch1_sumz = np.sum(np.array(img[:,:,0]), axis=0)   
+                #ch2_sumz = np.sum(np.array(img[:,:,1]), axis=0)
+                #ch3_sumz = np.sum(np.array(img[:,:,2]), axis=0)
                 #dapi_sumz = np.sum(np.array(img[:,:,3]), axis=0)
                
                 
