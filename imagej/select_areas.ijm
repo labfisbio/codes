@@ -17,8 +17,8 @@ dir = getDirectory( "Choose the Directory" );
 title = getTitle();
 
 //slices to Z Project SUM
-first_slice = getNumber("First Slice?", 1);
-slices = getNumber("How many slices?", 14);
+first_slice = getNumber("First Slice?", 7);
+slices = getNumber("How many slices?", 20);
 last_slice = first_slice + slices;
 run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projection=[Sum Slices]");
 
@@ -37,6 +37,8 @@ roiManager("Add");
 //duplicate stacks and Analyze Particles min area = 0.1 um at line 49
 roiManager("Select", 0);
 run("Duplicate...", "duplicate");
+setBackgroundColor(0, 0, 0);
+run("Clear Outside", "stack");
 rename("SUM");
 Stack.setChannel(3);
 run("Duplicate...", "duplicate channels=3")
