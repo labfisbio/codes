@@ -1,7 +1,7 @@
 //Macro to select a circle based on yh2ax foci size at channel 1
 //input: image with 4 channels, 1st channel gamma
 //outuput: cropped images around yh2ax foci
-//Method: inspect how many slices will be used, mark first and how many.
+//Method: inspect how many slices will be used, mark first and how many, line 54 change the area of the roi in um2
 //Made by Andre Thomaz (athomaz@ifi.unicamp.br) @ 2022-06-21
 
 //get image parameters
