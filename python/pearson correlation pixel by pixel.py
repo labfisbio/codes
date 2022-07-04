@@ -17,10 +17,10 @@ import os
 ######################################################
 
 ch1_name = 'yh2ax'
-ch2_name = 'myo5c'
+ch2_name = 'bclaf1'
 ch3_name = 'fak'
 ch4_name = 'dapi'
-
+group = 'random'
 #####################################################
 ch1_ch2 = ch1_name + '-' + ch2_name
 ch1_ch3 = ch1_name + '-' + ch3_name
@@ -32,6 +32,9 @@ ch3_ch4 = ch3_name + '-' + ch4_name
 #####################################################
 
 
+pix_total_ch1_ch2 = np.array([])
+pix_total_ch1_ch3 = np.array([])
+pix_total_ch2_ch3 = np.array([])
 
 
 
@@ -85,7 +88,10 @@ for folder in os.listdir():
                 
                 
                
-       
+        pix_total_ch1_ch2 = np.append(pix_total_ch1_ch2, rcorr_ch1_ch2_total)
+        pix_total_ch1_ch3 = np.append(pix_total_ch1_ch2, rcorr_ch1_ch3_total)
+        pix_total_ch2_ch3 = np.append(pix_total_ch1_ch2, rcorr_ch2_ch3_total)
+           
         #save
         df_rcorr = pd.DataFrame(np.transpose([rcorr_ch1_ch2_total, rcorr_ch1_ch3_total , rcorr_ch2_ch3_total ]), 
                                 columns=[ch1_ch2, ch1_ch3, ch2_ch3])
@@ -103,3 +109,25 @@ for folder in os.listdir():
                 
         print(folder+ " done")
         
+        
+        
+pix_total_ch1_ch2 = pd.DataFrame(np.transpose([pix_total_ch1_ch2]), columns=['rcorr'])
+pix_total_ch1_ch3 = pd.DataFrame(np.transpose([pix_total_ch1_ch3]), columns=['rcorr'])
+pix_total_ch2_ch3 = pd.DataFrame(np.transpose([pix_total_ch2_ch3]), columns=['rcorr'])
+
+pix_total_ch1_ch2['proteins'] = ch1_ch2
+pix_total_ch1_ch2['group'] = group
+pix_total_ch1_ch3['proteins'] = ch1_ch3
+pix_total_ch1_ch3['group'] = group
+pix_total_ch2_ch3['proteins'] = ch2_ch3
+pix_total_ch2_ch3['group'] = group
+
+
+
+
+filename_pix_total_ch1_ch2 = 'pix_total-'+ch1_ch2+'-'+group+'.xlsx'
+pix_total_ch1_ch2.to_excel(filename_pix_total_ch1_ch2)
+filename_pix_total_ch1_ch3 = 'pix_total-'+ch1_ch3+'-'+group+'.xlsx'
+pix_total_ch1_ch3.to_excel(filename_pix_total_ch1_ch3)
+filename_pix_total_ch2_ch3 = 'pix_total-'+ch2_ch3+'-'+group+'.xlsx'
+pix_total_ch2_ch3.to_excel(filename_pix_total_ch2_ch3)

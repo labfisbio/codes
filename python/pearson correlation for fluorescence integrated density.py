@@ -17,10 +17,10 @@ import os
 ######################################################
 
 ch1_name = 'yh2ax'
-ch2_name = 'myo5c'
+ch2_name = 'bclaf1'
 ch3_name = 'fak'
 ch4_name = 'dapi'
-group = 'bclaf1-fak'
+group = 'exp'
 
 #####################################################
 ch1_ch2 = ch1_name + '-' + ch2_name
@@ -31,7 +31,13 @@ ch2_ch4 = ch2_name + '-' + ch4_name
 ch3_ch4 = ch3_name + '-' + ch4_name
 
 #####################################################
-rcorr_total = np.array([])
+rcorr_total_ch1_ch2 = np.array([])
+rcorr_total_ch1_ch3 = np.array([])
+rcorr_total_ch2_ch3 = np.array([])
+
+
+
+
 #for each folder
 for folder in os.listdir():
     
@@ -89,8 +95,11 @@ for folder in os.listdir():
    
         
         
-        rcorr_total = np.append(rcorr_total, pearson_ch2_ch3)
-        #cel_number = current_folder.split(' ')[1]
+        
+        rcorr_total_ch1_ch2 = np.append(rcorr_total_ch1_ch2, pearson_ch1_ch2)
+        rcorr_total_ch1_ch3 = np.append(rcorr_total_ch1_ch3, pearson_ch1_ch3)
+        rcorr_total_ch2_ch3 = np.append(rcorr_total_ch2_ch3, pearson_ch2_ch3)
+        
         filename_int_den = 'int-den.xlsx'
         filename_rcorr = 'rcorr.xlsx'
         
@@ -104,7 +113,27 @@ for folder in os.listdir():
         os.chdir('..')
        
         print(folder+ " done")
-df_rcorr_total = pd.DataFrame(np.transpose([rcorr_total]), columns=['rcorr'])
-df_rcorr_total['group'] = group
-filename_df_rcorr_total = 'rcorr_total.xlsx'
-df_rcorr_total.to_excel(filename_df_rcorr_total)
+        
+        
+rcorr_total_ch1_ch2 = pd.DataFrame(np.transpose([rcorr_total_ch1_ch2]), columns=['rcorr'])
+rcorr_total_ch1_ch3 = pd.DataFrame(np.transpose([rcorr_total_ch1_ch3]), columns=['rcorr'])
+rcorr_total_ch2_ch3 = pd.DataFrame(np.transpose([rcorr_total_ch2_ch3]), columns=['rcorr'])
+
+
+rcorr_total_ch1_ch2['proteins'] = ch1_ch2
+rcorr_total_ch1_ch2['group'] = group
+rcorr_total_ch1_ch3['proteins'] = ch1_ch3
+rcorr_total_ch1_ch3['group'] = group
+rcorr_total_ch2_ch3['proteins'] = ch2_ch3
+rcorr_total_ch2_ch3['group'] = group
+
+
+filename_rcorr_total_ch1_ch2 = 'rcorr_total-'+ch1_ch2+'-'+group+'.xlsx'
+rcorr_total_ch1_ch2.to_excel(filename_rcorr_total_ch1_ch2)
+filename_rcorr_total_ch1_ch3 = 'rcorr_total-'+ch1_ch3+'-'+group+'.xlsx'
+rcorr_total_ch1_ch3.to_excel(filename_rcorr_total_ch1_ch3)
+filename_rcorr_total_ch2_ch3 = 'rcorr_total-'+ch2_ch3+'-'+group+'.xlsx'
+rcorr_total_ch2_ch3.to_excel(filename_rcorr_total_ch2_ch3)
+
+
+
