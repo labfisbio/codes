@@ -3,9 +3,9 @@
 Script to calculate the pearson correlation coeficient of each pixel of each patch 
 of the image for images in a folder. Pacthes = small images containing the structures to be correlated
 
-input: 2D image with 3 or 4 channels
+input: 2D image with 4 channels
 outuput: xlsx with pearson coefficient for all cells (df_rcorr)
-         
+          xlsx at root folder with coeficientes for all cells
 
 @author: Andre Thomaz (athomaz@ifi.unicam.br), 02/24/2021
 """
@@ -20,7 +20,7 @@ ch1_name = 'yh2ax'
 ch2_name = 'bclaf1'
 ch3_name = 'fak'
 ch4_name = 'dapi'
-group = 'random'
+group = 'exp' #it will be added to the total xlsx file name
 #####################################################
 ch1_ch2 = ch1_name + '-' + ch2_name
 ch1_ch3 = ch1_name + '-' + ch3_name
@@ -64,35 +64,27 @@ for folder in os.listdir():
                 ch2_sumz = np.array(img[:,:,1])
                 ch3_sumz = np.array(img[:,:,2])
                 
-            
-                #ch1_sumz = np.sum(np.array(img[:,:,0]), axis=0)   
-                #ch2_sumz = np.sum(np.array(img[:,:,1]), axis=0)
-                #ch3_sumz = np.sum(np.array(img[:,:,2]), axis=0)
-                #dapi_sumz = np.sum(np.array(img[:,:,3]), axis=0)
-               
-                
+                           
                 #transform image in 1D array and calculate pearson coefficent
                 rcorr_ch1_ch2 = np.corrcoef(ch1_sumz.flatten(), ch2_sumz.flatten())[0][1]
                 rcorr_ch1_ch3 = np.corrcoef(ch1_sumz.flatten(), ch3_sumz.flatten())[0][1]
                 rcorr_ch2_ch3 = np.corrcoef(ch2_sumz.flatten(), ch3_sumz.flatten())[0][1]
-                #rcorr_gamma_dapi = np.corrcoef(fak_sumz.flatten(), gamma_sumz.flatten())[0][1]
-          
                 
-                      
+             
                 
               
-                #make the total array
+                #make the array for all patches for each cell
                 rcorr_ch1_ch2_total = np.append(rcorr_ch1_ch2_total, rcorr_ch1_ch2)
                 rcorr_ch1_ch3_total = np.append(rcorr_ch1_ch3_total, rcorr_ch1_ch3)
                 rcorr_ch2_ch3_total  = np.append(rcorr_ch2_ch3_total, rcorr_ch2_ch3)
                 
                 
-               
+        #array with all the measurements
         pix_total_ch1_ch2 = np.append(pix_total_ch1_ch2, rcorr_ch1_ch2_total)
-        pix_total_ch1_ch3 = np.append(pix_total_ch1_ch2, rcorr_ch1_ch3_total)
-        pix_total_ch2_ch3 = np.append(pix_total_ch1_ch2, rcorr_ch2_ch3_total)
+        pix_total_ch1_ch3 = np.append(pix_total_ch1_ch3, rcorr_ch1_ch3_total)
+        pix_total_ch2_ch3 = np.append(pix_total_ch2_ch3, rcorr_ch2_ch3_total)
            
-        #save
+        #individual saves
         df_rcorr = pd.DataFrame(np.transpose([rcorr_ch1_ch2_total, rcorr_ch1_ch3_total , rcorr_ch2_ch3_total ]), 
                                 columns=[ch1_ch2, ch1_ch3, ch2_ch3])
                 
@@ -110,7 +102,7 @@ for folder in os.listdir():
         print(folder+ " done")
         
         
-        
+#total files to DataFrame      
 pix_total_ch1_ch2 = pd.DataFrame(np.transpose([pix_total_ch1_ch2]), columns=['rcorr'])
 pix_total_ch1_ch3 = pd.DataFrame(np.transpose([pix_total_ch1_ch3]), columns=['rcorr'])
 pix_total_ch2_ch3 = pd.DataFrame(np.transpose([pix_total_ch2_ch3]), columns=['rcorr'])
@@ -125,6 +117,7 @@ pix_total_ch2_ch3['group'] = group
 
 
 
+#save total files
 filename_pix_total_ch1_ch2 = 'pix_total-'+ch1_ch2+'-'+group+'.xlsx'
 pix_total_ch1_ch2.to_excel(filename_pix_total_ch1_ch2)
 filename_pix_total_ch1_ch3 = 'pix_total-'+ch1_ch3+'-'+group+'.xlsx'

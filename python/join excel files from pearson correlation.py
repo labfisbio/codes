@@ -1,7 +1,7 @@
 """
-Script to join the outputs of rcorr calc.py and correl pixel.py and saves the graphs
+Script to join the outputs of correlation calculations and saves the graphs
 
-input: xlsx files outputed by rho calc.py (rcorr-*, int-den-*) and correl pixel.py (corr pixel*)
+input: xlsx files outputed by correlation scripts
 output: graphs for each xlsx
 
 @author: Andre

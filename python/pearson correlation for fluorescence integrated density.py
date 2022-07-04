@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Script to calculate the pearson correlation coeficient of the fluorescence integrated density of each channel
-of the image. 
+of the image per cell
 
-input: 3D image with 3 or 4 channels
+input: 3D image with 4 channels
 outuput: xlsx with coeficiente for each cell folder (df_rcorr)
          xlsx with integrated density for each cell folder (df_int_den)
+         xlsx at root folder with coeficientes for all cells
 
 @author: Andre Thomaz, 02/24/2021
 """
@@ -20,7 +21,7 @@ ch1_name = 'yh2ax'
 ch2_name = 'bclaf1'
 ch3_name = 'fak'
 ch4_name = 'dapi'
-group = 'exp'
+group = 'exp' #it will be added to the total xlsx file name
 
 #####################################################
 ch1_ch2 = ch1_name + '-' + ch2_name
@@ -95,11 +96,12 @@ for folder in os.listdir():
    
         
         
-        
+        #prepare the arrays with all measurements
         rcorr_total_ch1_ch2 = np.append(rcorr_total_ch1_ch2, pearson_ch1_ch2)
         rcorr_total_ch1_ch3 = np.append(rcorr_total_ch1_ch3, pearson_ch1_ch3)
         rcorr_total_ch2_ch3 = np.append(rcorr_total_ch2_ch3, pearson_ch2_ch3)
         
+        #save individual files
         filename_int_den = 'int-den.xlsx'
         filename_rcorr = 'rcorr.xlsx'
         
@@ -114,7 +116,7 @@ for folder in os.listdir():
        
         print(folder+ " done")
         
-        
+#total files to DataFrame   
 rcorr_total_ch1_ch2 = pd.DataFrame(np.transpose([rcorr_total_ch1_ch2]), columns=['rcorr'])
 rcorr_total_ch1_ch3 = pd.DataFrame(np.transpose([rcorr_total_ch1_ch3]), columns=['rcorr'])
 rcorr_total_ch2_ch3 = pd.DataFrame(np.transpose([rcorr_total_ch2_ch3]), columns=['rcorr'])
@@ -127,7 +129,7 @@ rcorr_total_ch1_ch3['group'] = group
 rcorr_total_ch2_ch3['proteins'] = ch2_ch3
 rcorr_total_ch2_ch3['group'] = group
 
-
+#save total files
 filename_rcorr_total_ch1_ch2 = 'rcorr_total-'+ch1_ch2+'-'+group+'.xlsx'
 rcorr_total_ch1_ch2.to_excel(filename_rcorr_total_ch1_ch2)
 filename_rcorr_total_ch1_ch3 = 'rcorr_total-'+ch1_ch3+'-'+group+'.xlsx'
