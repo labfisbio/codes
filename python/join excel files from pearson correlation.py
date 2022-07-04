@@ -43,13 +43,14 @@ for folder in os.listdir():
         #pearson for integrated density
         xlsx_name = "rcorr.xlsx"
         df  = pd.read_excel(xlsx_name)
-        df_rcorr = df_rcorr.append(df, ignore_index=True)
+        #df_rcorr = df_rcorr.append(df, ignore_index=True)
+        df_rcorr = pd.concat([df_rcorr,df], ignore_index=True)
         
         #pearson pixel by pixel for each patch
         xlsx_name_pix = "corr pixel.xlsx"
         df  = pd.read_excel(xlsx_name_pix)
-        df_pix = df_pix.append(df, ignore_index=True)
-        
+        #df_pix = df_pix.append(df, ignore_index=True)
+        df_pix = pd.concat([df_pix,df], ignore_index=True)
     
         print(folder + " done")
         os.chdir('..')
@@ -65,13 +66,13 @@ df_intermed = pd.DataFrame(df_rcorr[ch1_ch3])
 df_intermed.columns = ['rcorr']
 df_intermed["channels"] = ch1_ch3
 
-df_column = df_column.append(df_intermed, ignore_index=True)
+df_column = pd.concat([df_column,df_intermed], ignore_index=True)
 
 df_intermed = pd.DataFrame(df_rcorr[ch2_ch3])
 df_intermed.columns = ['rcorr']
 df_intermed["channels"] = ch2_ch3
 
-df_column = df_column.append(df_intermed, ignore_index=True)
+df_column = pd.concat([df_column, df_intermed], ignore_index=True)
 
 
       
