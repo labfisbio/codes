@@ -18,8 +18,8 @@ dir = getDirectory( "Choose the Directory" );
 title = getTitle();
 
 //slices to Z Project SUM
-first_slice = getNumber("First Slice?", 6);
-slices = getNumber("How many slices?", 15);
+first_slice = getNumber("First Slice?", 14);
+slices = getNumber("How many slices?", 9);
 last_slice = first_slice + slices;
 run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projection=[Sum Slices]");
 
@@ -28,7 +28,7 @@ run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projectio
 z_title = 'SUM_'+title;
 selectWindow(z_title);
 Stack.setDisplayMode("color");
-Stack.setChannel(1);
+Stack.setChannel(4);
 setTool("wand");
 setAutoThreshold("Default dark");
 run("Threshold...");
@@ -45,14 +45,14 @@ run("Clear Outside", "stack");
 rename("SUM");
 close(z_title);
 selectWindow("SUM");
-Stack.setChannel(4);
-run("Duplicate...", "duplicate channels=3")
+Stack.setChannel(2);
+run("Duplicate...", "duplicate channels=2")
 setAutoThreshold("Default dark");
 run("Threshold...");
 waitForUser('Adjust Threshold to select clusters');
 run("Convert to Mask");
 selectWindow("SUM-1");
-run("Analyze Particles...", "size=0.20-Infinity add");
+run("Analyze Particles...", "size=0.15-Infinity add");
 close();
 selectWindow("SUM");
 
@@ -64,6 +64,7 @@ roiManager("rename", "Nucleus");
 
 //start
 num_Clusters = roiManager("count") - 1;
+print('Number of detected clusters = ' + num_Clusters);
 for (i=1; i <= num_Clusters;i++) //start at 1 to keep nucleus ROI
 {	roiManager("Select", i);
 	imgNumber = i+0;
@@ -93,6 +94,19 @@ for (i=1; i <= num_Clusters;i++) //start at 1 to keep nucleus ROI
 	close();
 	
 	}
+
+//save Results table with x,y and area 
+area_array = newArray();
+
+for (i=0; i < nResults(); i++) {
+	area_i = getResult("Area", i);
+	area_array = Array.concat(area_array,area_i);
+}
+Array.getStatistics(area_array, minimum, maximum, mean);
+setResult("Mean", i, mean);
+saveAs("Results", dir + "Results.csv");
+
+
 
 //Random Areas
 roiManager("select", 0);
