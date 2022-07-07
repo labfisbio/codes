@@ -102,9 +102,9 @@ for (i=0; i < nResults(); i++) {
 	area_i = getResult("Area", i);
 	area_array = Array.concat(area_array,area_i);
 }
-Array.getStatistics(area_array, minimum, maximum, mean);
-setResult("Mean", i, mean);
-saveAs("Results", dir + "Results.csv");
+//Array.getStatistics(area_array, minimum, maximum, mean);
+//setResult("Mean", i, mean);
+saveAs("Results", dir + "cluster_area.csv");
 
 
 

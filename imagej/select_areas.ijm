@@ -1,7 +1,8 @@
-//Macro to select a circle based on cluster size at channel 3
+//Macro to select a circle based on cluster size at channel 3 and the same number of random areas
 //input: image with 4 channels, 4th channel nucleus
 //outuput: cropped images around cluster
 //Method: inspect how many slices will be used, mark first and how many.
+//TODO: check if random areas are inside nucleus ROI and if they don't overlap with clusters
 //Made by Andre Thomaz (athomaz@ifi.unicamp.br) @ 2021-10-11
 
 //clear 
@@ -17,8 +18,8 @@ dir = getDirectory( "Choose the Directory" );
 title = getTitle();
 
 //slices to Z Project SUM
-first_slice = getNumber("First Slice?", 7);
-slices = getNumber("How many slices?", 20);
+first_slice = getNumber("First Slice?", 14);
+slices = getNumber("How many slices?", 9);
 last_slice = first_slice + slices;
 run("Z Project...", "start=" + first_slice + " stop=" + last_slice + " projection=[Sum Slices]");
 
@@ -34,26 +35,41 @@ run("Threshold...");
 waitForUser('Adjust Threshold to select the nucleus and select it with wand');
 roiManager("Add");
 
-//duplicate stacks and Analyze Particles min area = 0.1 um at line 49
+
+//duplicate stacks and Analyze Particles min area = 0.2 um at line 49
 roiManager("Select", 0);
 run("Duplicate...", "duplicate");
+roiManager("add");
 setBackgroundColor(0, 0, 0);
 run("Clear Outside", "stack");
 rename("SUM");
-Stack.setChannel(3);
-run("Duplicate...", "duplicate channels=3")
+close(z_title);
+selectWindow("SUM");
+Stack.setChannel(2);
+run("Duplicate...", "duplicate channels=2")
 setAutoThreshold("Default dark");
 run("Threshold...");
 waitForUser('Adjust Threshold to select clusters');
 run("Convert to Mask");
 selectWindow("SUM-1");
-run("Analyze Particles...", "size=0.20-Infinity add");
+run("Analyze Particles...", "size=0.15-Infinity add");
+close();
 selectWindow("SUM");
 
+roiManager("Select", 0);
+roiManager("Delete");
+roiManager("Select", 0);
+roiManager("rename", "Nucleus");
+
+
 //start
-numROIS = roiManager("count");
-for (i=1; i<numROIS;i++) //start at 1 to keep nucleus ROI
+num_Clusters = roiManager("count") - 1;
+print('Number of detected clusters = ' + num_Clusters);
+for (i=1; i <= num_Clusters;i++) //start at 1 to keep nucleus ROI
 {	roiManager("Select", i);
+	imgNumber = i+0;
+	roiManager("rename", "cluster "+imgNumber);
+	
 	run("Set Measurements...", "area centroid redirect=None decimal=3"); 
 	results = roiManager("Measure"); //measure the area
 	area = getResult("Area");
@@ -67,19 +83,38 @@ for (i=1; i<numROIS;i++) //start at 1 to keep nucleus ROI
 	//selectWindow("SUM_copy-stacks.czi");
 	makeOval(x, y, d, d);
 	roiManager("Add");
+	roiManager("Select", i + num_Clusters);
+	roiManager("rename", "area "+imgNumber);
 	run("Duplicate...", "duplicate");
-	run("Make Inverse");
-	setBackgroundColor(0, 0, 0);
-	run("Clear", "slice");
-	Stack.setChannel(2);
-	run("Clear", "slice");
-	Stack.setChannel(3);
-	run("Clear", "slice");
-	imgNumber = i+0;
+	run("Clear Outside", "stack");
+	
 	name = dir + imgNumber;
 	//print(name);
 	saveAs("TIff", name);
 	close();
 	
 	}
+
+//save Results table with x,y and area 
+area_array = newArray();
+
+for (i=0; i < nResults(); i++) {
+	area_i = getResult("Area", i);
+	area_array = Array.concat(area_array,area_i);
+}
+//Array.getStatistics(area_array, minimum, maximum, mean);
+//setResult("Mean", i, mean);
+saveAs("Results", dir + "cluster_area.csv");
+
+print("Done");
+
+
+
+
+
+
+
+
+
+
 
