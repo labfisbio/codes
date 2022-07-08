@@ -14,6 +14,10 @@ import numpy as np
 import seaborn as sns
 #############################################################
 
+sns.set(font_scale=1.0)
+sns.set_style("ticks")
+
+
 ch1_name = 'yH2AX'
 ch2_name = 'BCLAF1'
 ch3_name = 'PTK2'
@@ -82,6 +86,25 @@ print('Mean cluster area SEM: ' + str(mean_area_sem) + ' um^2')
 print('Mean cluster number: ' + str(mean_n_cluster))
 print('Mean cluster number SEM :' + str(mean_n_cluster_sem))
 
+plt.figure(figsize = (10,6))
+sns.histplot(df_area['Area'], binwidth=0.1, color='gray')
+plt.ylabel('Counts')
+plt.xlabel("Area of BCLAF1 clusters ("+r'$\mu m^2$'+ ")")
+#plt.title("Number of Focal Contacts by area (between 0.2 and 1 " + r'$\mu^2$' + ")")
+plt.tight_layout()
+plt.savefig("cluster_area_histogram.png", dpi=600)
+
+
+plt.figure(figsize = (10,6))
+sns.histplot(array_n_cluster, binwidth=1, color='gray')
+plt.ylabel('Counts')
+plt.xlabel("Number of BCLAF1 clusters per cell")
+#plt.title("Number of Focal Contacts by area (between 0.2 and 1 " + r'$\mu^2$' + ")")
+plt.tight_layout()
+plt.savefig("cluster_number_histogram.png", dpi=600)  
+    
+    
+    
 
 
 #transform rcorr dataframe into one column dataframe to catplot by seaborn
@@ -90,11 +113,11 @@ df_column.columns = ['rcorr']
 df_column["channels"] = ch2_ch3
 
 
-df_intermed = pd.DataFrame(df_rcorr[ch1_ch3])
-df_intermed.columns = ['rcorr']
-df_intermed["channels"] = ch1_ch3
+# df_intermed = pd.DataFrame(df_rcorr[ch1_ch3])
+# df_intermed.columns = ['rcorr']
+# df_intermed["channels"] = ch1_ch3
 
-df_column = pd.concat([df_column,df_intermed], ignore_index=True)
+#df_column = pd.concat([df_column,df_intermed], ignore_index=True)
 
 df_intermed = pd.DataFrame(df_rcorr[ch1_ch2])
 df_intermed.columns = ['rcorr']
@@ -103,7 +126,7 @@ df_intermed["channels"] = ch1_ch2
 df_column = pd.concat([df_column, df_intermed], ignore_index=True)
 
 
-      
+plt.figure(figsize = (10,6))
 sns.catplot(x='channels', y='rcorr', data=df_column, kind='swarm')
 x_l = [-5,45]
 y_l = [0,0]
@@ -124,14 +147,16 @@ plt.savefig('pearson-int-den-real.png', dpi=600)
 plt.figure()
 sns.kdeplot(df_pix[ch2_ch3], label=ch2_ch3)
 plt.xlabel('Histogram Pearson Pixel ')
+plt.xlim(-1.1,1.1)
 plt.tight_layout()
 #plt.savefig('pixel-corr-bclaf1-gamma.png', dpi=600)
 #df = pd.DataFrame(df_pix['bclaf1_gamma'])
 #df.to_excel('pixel-corr-bclaf1_gamma.xlsx')
 
+
 sns.kdeplot(df_pix[ch1_ch3], label=ch1_ch3)
 sns.kdeplot(df_pix[ch1_ch2], label=ch1_ch2)
-plt.legend()
+plt.legend(loc='upper left')
 plt.savefig('pixel-corr.png', dpi=600)
 
 
