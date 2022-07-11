@@ -39,6 +39,7 @@ df_pix_flip = pd.DataFrame([])
 df_int = pd.DataFrame([])
 df_area = pd.DataFrame([])
 array_n_cluster = np.array([])
+array_rcorr_mean =  np.array([])
 
 #for each folder grabs the values of rcorr
 for folder in os.listdir():
@@ -111,26 +112,37 @@ plt.savefig("cluster_number_histogram.png", dpi=600)
 df_column = pd.DataFrame(df_rcorr[ch2_ch3])
 df_column.columns = ['rcorr']
 df_column["channels"] = ch2_ch3
-
+array_rcorr_mean = df_column['rcorr'].mean()
 
 # df_intermed = pd.DataFrame(df_rcorr[ch1_ch3])
 # df_intermed.columns = ['rcorr']
 # df_intermed["channels"] = ch1_ch3
+#array_rcorr_mean = np.append(array_rcorr_mean, df_intermed['rcorr'].mean())
 
-#df_column = pd.concat([df_column,df_intermed], ignore_index=True)
+# df_column = pd.concat([df_column,df_intermed], ignore_index=True)
 
 df_intermed = pd.DataFrame(df_rcorr[ch1_ch2])
 df_intermed.columns = ['rcorr']
 df_intermed["channels"] = ch1_ch2
+array_rcorr_mean = np.append(array_rcorr_mean, df_intermed['rcorr'].mean())
 
 df_column = pd.concat([df_column, df_intermed], ignore_index=True)
 
-
+#catplot of the data
 plt.figure(figsize = (10,6))
 sns.catplot(x='channels', y='rcorr', data=df_column, kind='swarm')
+sns.pointplot(x='channels', y='rcorr', data=df_column,  join=False, capsize=.3, ci='sd', markers='', color='gray')
 x_l = [-5,45]
 y_l = [0,0]
 plt.plot(x_l, y_l,'k:', alpha=0.4)
+
+
+n_categories = df_column['channels'].nunique()
+
+for i in range(n_categories):
+    plt.plot([i-0.2,i+0.2],[array_rcorr_mean[i],array_rcorr_mean[i]], linewidth=3, color='gray')
+    
+    
 plt.yticks((-1,-0.5,0,0.5,1))
 plt.ylabel('Correlation Coeficient (Integrated Density/cell)')
 plt.xlabel('')
